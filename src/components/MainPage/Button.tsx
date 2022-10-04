@@ -5,7 +5,7 @@ interface IButtonProps {
     handleClick?:(e:SyntheticEvent)=>void;
     green?:boolean;
     styles?:string;
-    type: "button" | "submit" | "reset" | undefined
+    type?: "button" | "submit" | "reset" | undefined
 }
 
 export function Button ({text,handleClick,green,styles,type}:IButtonProps){

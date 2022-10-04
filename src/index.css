@@ -36,3 +36,17 @@ body {
   left: 0;
   background-color: #B7280F;
 }
+
+.taskItem_dropdown::after{
+  content:'';
+  position:absolute;
+  width:10px;
+  height:10px;
+  border-top:1px solid #c4c4c4;
+  border-right:1px solid #c4c4c4;
+  transform: rotate(-45deg) translate(-50%, -130%);
+  
+  background-color:white;
+  top:0;
+  left:55%;
+}

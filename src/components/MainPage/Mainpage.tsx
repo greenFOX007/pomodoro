@@ -1,4 +1,5 @@
 import React from "react";
+import { PomodoroTimer } from "../PomodoroTimer";
 import { FormAddItem } from "./FormAddItem";
 
 export function Mainpage (){
@@ -6,8 +7,8 @@ export function Mainpage (){
    
 
     return(
-        <div className="pt-24">
-            <div className="w-2/5 w">
+        <div className="pt-24 flex">
+            <div className="w-2/5 w mr-4">
                 <h2 className="text-2xl font-bold leading-8 mb-1">Ура! Теперь можно начать работать:</h2>
                 <ul className="text-base font-normal mb-6">
                     <li className="red-list-type">Выберите категорию и напишите название текущей задачи</li>
@@ -18,6 +19,7 @@ export function Mainpage (){
                 </ul>
                <FormAddItem/>
             </div>
+            <PomodoroTimer />
         </div>
     )
 }

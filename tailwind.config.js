@@ -26,6 +26,12 @@ module.exports = {
         'gray-C4':'#C4C4C4',
         'gray-F4':'#F4F4F4',
         'gray-99':'#999999',
+      },
+      fontSize:{
+        '150px':'150px'
+      },
+      lineHeight:{
+        '180px':'180px'
       }
     },
   },
