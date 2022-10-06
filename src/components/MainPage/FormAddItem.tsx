@@ -26,11 +26,10 @@ export function FormAddItem (){
 
     function handleSubmit (e:FormEvent) {
         e.preventDefault()
-        getTaskList.insert({name:input,id:generateRamdomID(),time:25})
+        getTaskList.insert({name:input,id:generateRamdomID(),time:25,pomodoroNum:1})
         
     }  
-
-
+    
 
     return (
         <div className="w-96">

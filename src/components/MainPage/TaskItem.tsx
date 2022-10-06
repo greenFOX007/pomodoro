@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { getTaskList } from './FormAddItem'
 
 
@@ -8,24 +8,50 @@ interface IItem {
     name:string,
     id:string,
     itemNum:number,
+    objKey:number,
 }
 
 
 
-export function TaskItem ({name,id,itemNum}:IItem){
+export function TaskItem ({name,id,itemNum,objKey}:IItem){
 
     const [isOpen, setIsOpen] = useState(false)
+
+    const ref = useRef<HTMLDivElement>(null)
+    const buttonRef = useRef<HTMLButtonElement>(null)
+
+    useEffect(()=>{
+        function handleClick (event:MouseEvent) {
+      
+            if(event.target instanceof Node && !ref.current?.contains(event.target) && !buttonRef.current?.contains(event.target))
+            setIsOpen(false)
+            
+        }
+
+        document.addEventListener('click', handleClick)
+
+        return ()=>{
+            document.removeEventListener('click',handleClick)
+          }
+    },[])
 
     function handleClick() {
         setIsOpen(!isOpen)
     }
 
-
     function handleDelete (e:React.SyntheticEvent){
         e.preventDefault()
-        getTaskList.remove(id)
-        console.log(id)
-        
+        getTaskList.remove(id)  
+    }
+
+    function handleAddPomodoro (e:React.SyntheticEvent){
+        e.preventDefault()
+        getTaskList.addPomodoro(objKey)
+    }
+
+    function handleDeletePomodoro (e:React.SyntheticEvent){
+        e.preventDefault()
+        getTaskList.deletePomodoro(objKey)
     }
 
     return (
@@ -35,7 +61,7 @@ export function TaskItem ({name,id,itemNum}:IItem){
                 <div className=''>{name}</div>
             </div>
             <div className='relative'>
-            <button onClick={handleClick} className='w-8 h-8  rounded-full flex justify-center items-center'>
+            <button ref={buttonRef} onClick={handleClick} className='w-8 h-8  rounded-full flex justify-center items-center'>
                 <svg width="26" height="6" viewBox="0 0 26 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="3" cy="3" r="3" fill="#C4C4C4"/>
                     <circle cx="13" cy="3" r="3" fill="#C4C4C4"/>
@@ -43,11 +69,11 @@ export function TaskItem ({name,id,itemNum}:IItem){
                 </svg>
             </button>
             {isOpen && (
-                <div className='absolute top-10 left-1/2 -translate-x-1/2 border taskItem_dropdown z-10'>
+                <div ref={ref} className='absolute top-10 left-1/2 -translate-x-1/2 border taskItem_dropdown z-10'>
                     <div className='taskItem_dropdown relative'>
                         <ul className='bg-white px-3 py-3'>
                             <li className=''>
-                                <button className='flex p-2'>
+                                <button onClick={handleAddPomodoro} className='flex p-2'>
                                     <svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M9 4.75V12.25H3V4.75H9ZM7.875 0.25H4.125L3.375 1H0.75V2.5H11.25V1H8.625L7.875 0.25ZM10.5 3.25H1.5V12.25C1.5 13.075 2.175 13.75 3 13.75H9C9.825 13.75 10.5 13.075 10.5 12.25V3.25Z" fill="#A8B64F"/>
                                     </svg>
@@ -55,7 +81,7 @@ export function TaskItem ({name,id,itemNum}:IItem){
                                 </button>
                             </li>
                             <li className=''>
-                                <button className='flex p-2'>
+                                <button onClick={handleDeletePomodoro} disabled={itemNum===1?true:false} className='flex p-2'>
                                     <svg className='-translate-x-1' width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <g clipPath="url(#clip0_34_33)">
                                         <path d="M9 1.5C4.8675 1.5 1.5 4.8675 1.5 9C1.5 13.1325 4.8675 16.5 9 16.5C13.1325 16.5 16.5 13.1325 16.5 9C16.5 4.8675 13.1325 1.5 9 1.5ZM9 15C5.6925 15 3 12.3075 3 9C3 5.6925 5.6925 3 9 3C12.3075 3 15 5.6925 15 9C15 12.3075 12.3075 15 9 15Z" fill="#C4C4C4"/>
