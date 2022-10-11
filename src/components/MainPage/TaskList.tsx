@@ -1,12 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TaskItem } from './TaskItem'
 
-// interface IItem {
-//     name:string,
-//     id:string,
-//     time:number,
-//     pomodoroNum:number,
-// }
 
 interface IList1 {
     list:IList<IListItem>
@@ -25,7 +19,6 @@ interface IList<IListItem> {
 
 export function TaskList ({list}:IList1){
     const [time,setTime] = useState<number>(0)
-    // const [id,setId] = useState()
 
     useEffect(()=>{
         const arr:number[] = []

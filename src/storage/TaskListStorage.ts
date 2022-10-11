@@ -14,11 +14,17 @@ interface IList<IListItem> {
     [N:number]:IListItem
 }
 
+interface IChangeTask {
+    key:number;
+    value:string
+}
+
 
 export function TaskListApi (initial: IList<IListItem>){
     const insert = createEvent<IListItem>()
     const remove = createEvent<string>()
     const change = createEvent<string>()
+    const changeTask = createEvent<IChangeTask>()
     const reset = createEvent<void>()
     const addPomodoro = createEvent<number>()
     const deletePomodoro = createEvent<number>()
@@ -31,6 +37,7 @@ export function TaskListApi (initial: IList<IListItem>){
     .on(remove, (taskLits, index) => ({...Object.values(taskLits).filter((item) =>  item.id !== index.toString())}))
     .on(addPomodoro, (taskList, key)=> ({...taskList,[key]:{...taskList[key],pomodoroNum:taskList[key].pomodoroNum+1}}))
     .on(deletePomodoro,(taskList, key)=> ({...taskList,[key]:{...taskList[key],pomodoroNum:taskList[key].pomodoroNum-1}}))
+    .on(changeTask,((taskList, {key,value})=> ({...taskList,[key]:{...taskList[key],name:value}})))
 
     const submit = createEvent<React.SyntheticEvent>()
      submit.watch(event => event.preventDefault())
@@ -46,6 +53,7 @@ export function TaskListApi (initial: IList<IListItem>){
       submit,
       remove,
       change,
+      changeTask,
       reset,
       addPomodoro,
       deletePomodoro,

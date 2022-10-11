@@ -54,3 +54,12 @@ body {
 .taskItem_dropdown button:disabled svg path {
   fill:#c4c4c4
 }
+
+.custom-underline::before{
+  content:'';
+  position:absolute;
+  width:100%;
+  height:.5px;
+  background-color:#333;
+  bottom:0;
+}

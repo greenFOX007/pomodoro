@@ -1,5 +1,5 @@
 import { useStore } from "effector-react";
-import React, { ChangeEvent, FormEvent, useEffect} from "react";
+import { ChangeEvent, FormEvent, useEffect} from "react";
 import { TaskListApi } from "../../storage/TaskListStorage";
 import { generateRamdomID } from "../../utills/generateRandomIndex";
 import { Button } from "./Button";
