@@ -8,7 +8,9 @@ interface IList1 {
 interface IListItem {
     name: string,
     id:string,
-    time:number,
+    time:{
+        minuts:number,
+    },
     pomodoroNum:number,
 } 
 
@@ -23,7 +25,7 @@ export function TaskList ({list}:IList1){
     useEffect(()=>{
         const arr:number[] = []
         if(Object.values(list).length !== 0){
-            Object.values(list).map((item)=>arr.push(item.time*item.pomodoroNum))
+            Object.values(list).map((item)=>arr.push(item.time.minuts*item.pomodoroNum))
             const summ = arr.reduce((prev,curr)=>prev+curr)
             setTime(summ)
         }

@@ -28,10 +28,8 @@ export function TaskItem ({name,id,itemNum,objKey}:IItem){
 
     useEffect(()=>{
         function handleClick (event:MouseEvent) {
-      
             if(event.target instanceof Node && !ref.current?.contains(event.target) && !buttonRef.current?.contains(event.target))
             setIsOpen(false)
-            
         }
 
         document.addEventListener('click', handleClick)

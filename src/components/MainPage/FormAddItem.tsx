@@ -7,7 +7,6 @@ import { TaskList } from "./TaskList";
 
 
 export const getTaskList = TaskListApi(JSON.parse(localStorage.getItem('TaskItem')||'[]'))
-   
 
 export function FormAddItem (){
 
@@ -26,7 +25,7 @@ export function FormAddItem (){
 
     function handleSubmit (e:FormEvent) {
         e.preventDefault()
-        getTaskList.insert({name:input,id:generateRamdomID(),time:25,pomodoroNum:1})
+        getTaskList.insert({name:input,id:generateRamdomID(),time:{minuts:25},pomodoroNum:1,pomodoroEndNum:1})
         
     }  
     
@@ -34,7 +33,13 @@ export function FormAddItem (){
     return (
         <div className="w-96">
             <form onSubmit={handleSubmit} className="mb-6 ">
-                 <input type={"text"} placeholder={'Название задачи'} onChange={handleChange} value={input} className="bg-gray-F4 w-full block pl-4 text-base leading-4 py-5 focus:outline-none placeholder:text-gray-99"></input>
+                 <input 
+                    type={"text"} 
+                    placeholder={'Название задачи'} 
+                    onChange={handleChange} 
+                    value={input} 
+                    className="bg-gray-F4 w-full block pl-4 text-base leading-4 py-5 focus:outline-none placeholder:text-gray-99"
+                 />
                  <Button green={true} type={'submit'} text={'Добавить'} styles={'mt-6'} />
             </form>
             <TaskList list={taskList} />

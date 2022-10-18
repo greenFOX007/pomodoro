@@ -3,11 +3,14 @@ import React from 'react'
 
 
 
-interface IListItem {
+ export interface IListItem {
     name: string,
     id:string,
-    time:number,
+    time:{
+        minuts:number,
+    },
     pomodoroNum:number,
+    pomodoroEndNum:number,
 } 
 
 interface IList<IListItem> {
@@ -35,19 +38,13 @@ export function TaskListApi (initial: IList<IListItem>){
     const $taskListitems = createStore<IList<IListItem>>(initial)
     .on(insert, (taskList, newtaskItem) => ({...taskList,[Object.keys(taskList).length]:newtaskItem}))
     .on(remove, (taskLits, index) => ({...Object.values(taskLits).filter((item) =>  item.id !== index.toString())}))
-    .on(addPomodoro, (taskList, key)=> ({...taskList,[key]:{...taskList[key],pomodoroNum:taskList[key].pomodoroNum+1}}))
+    .on(addPomodoro, (taskList, key)=> ({...taskList,[key]:{...taskList[key],pomodoroNum:taskList[key].pomodoroNum+1,pomodoroEndNum:taskList[key].pomodoroEndNum+1}}))
     .on(deletePomodoro,(taskList, key)=> ({...taskList,[key]:{...taskList[key],pomodoroNum:taskList[key].pomodoroNum-1}}))
     .on(changeTask,((taskList, {key,value})=> ({...taskList,[key]:{...taskList[key],name:value}})))
 
     const submit = createEvent<React.SyntheticEvent>()
      submit.watch(event => event.preventDefault())
 
-    //  sample({
-    //     clock: submit,
-    //     source: $input,
-
-    //     target: insert,
-    //   })
   
     return {
       submit,

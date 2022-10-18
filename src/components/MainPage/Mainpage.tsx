@@ -1,5 +1,5 @@
 import React from "react";
-import { PomodoroTimer } from "../PomodoroTimer";
+import { PomodoroTimerContainer } from "../PomodoroTimerContainer";
 import { FormAddItem } from "./FormAddItem";
 
 export function Mainpage (){
@@ -19,7 +19,7 @@ export function Mainpage (){
                 </ul>
                <FormAddItem/>
             </div>
-            <PomodoroTimer />
+            <PomodoroTimerContainer />
         </div>
     )
 }
