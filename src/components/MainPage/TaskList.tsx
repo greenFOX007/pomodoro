@@ -9,7 +9,9 @@ interface IListItem {
     name: string,
     id:string,
     time:{
-        minuts:number,
+        workingMinuts:number,
+        shortBreak:number,
+        longBreak:number,
     },
     pomodoroNum:number,
 } 
@@ -25,7 +27,7 @@ export function TaskList ({list}:IList1){
     useEffect(()=>{
         const arr:number[] = []
         if(Object.values(list).length !== 0){
-            Object.values(list).map((item)=>arr.push(item.time.minuts*item.pomodoroNum))
+            Object.values(list).map((item)=>arr.push(item.time.workingMinuts*item.pomodoroNum))
             const summ = arr.reduce((prev,curr)=>prev+curr)
             setTime(summ)
         }

@@ -7,7 +7,9 @@ import React from 'react'
     name: string,
     id:string,
     time:{
-        minuts:number,
+        workingMinuts:number,
+        shortBreak:number,
+        longBreak:number,
     },
     pomodoroNum:number,
     pomodoroEndNum:number,

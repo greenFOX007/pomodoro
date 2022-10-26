@@ -11,7 +11,9 @@ export function PomodoroTimerContainer (){
     
     const list:Array<IListItem> = Object.values(taskList)
 
-    const [minuts,setMinuts] = useState<number>(list.length!==0?list[0].time.minuts*60:25*60)
+    const [workingMinuts,setWorkingMinuts] = useState<number>(list.length!==0?list[0].time.workingMinuts*60:25*60)
+
+    const [shortBreak,setShortBreak] = useState<number>(list.length!==0?list[0].time.shortBreak*60:25*60)
 
     const [isTimerStarted,setIsTimerStarted] = useState(false)
 
@@ -21,17 +23,19 @@ export function PomodoroTimerContainer (){
 
     const [firstTask,setFirstTask] = useState(list[0])
 
+    const [isBreak,setIsBreak] = useState(false)
+
     useEffect(()=>{
         if (list.length!==0 && list[0].pomodoroNum===0){
             getTaskList.remove(list[0].id)
             setIsTimerStarted(false)
             setIsPause(false)
-            setMinuts(list.length!==0?list[0].time.minuts*60:25*60)
+            setWorkingMinuts(list.length!==0?list[0].time.workingMinuts*60:25*60)
         } 
         if (list.length===0){
             setIsTimerStarted(false)
             setIsPause(false)
-            setMinuts(list.length!==0?list[0].time.minuts*60:25*60)
+            setWorkingMinuts(list.length!==0?list[0].time.workingMinuts*60:25*60)
         }   
     },[list])
 
@@ -39,17 +43,41 @@ export function PomodoroTimerContainer (){
         if(firstTask !== list[0]){
             setIsTimerStarted(false)
             setIsPause(false)
-            setMinuts(list.length!==0?list[0].time.minuts*60:25*60)
+            setWorkingMinuts(list.length!==0?list[0].time.workingMinuts*60:25*60)
             setClearTimer(clearInterval(clearTimer))
             setFirstTask(list[0])
         }
     },[list.length])
+
+    useEffect(()=>{
+        if(workingMinuts===0){
+            setIsBreak(true)
+            setIsTimerStarted(true)
+            setClearTimer(setInterval(()=>{setShortBreak(prev=>prev-1)},1000))
+        }
+        if(shortBreak===0){
+            getTaskList.deletePomodoro(0)
+            setClearTimer(clearInterval(clearTimer))
+            setShortBreak(list.length!==0?list[0].time.shortBreak*60:25*60)
+            setIsTimerStarted(false)
+            setIsPause(false)
+            setIsBreak(false)
+            setWorkingMinuts(list.length!==0?list[0].time.workingMinuts*60:25*60)
+        }
+
+    },[workingMinuts,shortBreak])
     
 
     function startTimer (){
         if(list.length !== 0){
+            setIsPause(false)
             setIsTimerStarted(true)
-            setClearTimer(setInterval(()=>{setMinuts(prev=>prev-1)},1000))
+
+            if(!isBreak){
+                setClearTimer(setInterval(()=>{setWorkingMinuts(prev=>prev-1)},1000))
+            } else {
+                setClearTimer(setInterval(()=>{setShortBreak(prev=>prev-1)},1000))
+            }
         }
      }
 
@@ -60,33 +88,68 @@ export function PomodoroTimerContainer (){
     }
 
     function doneTask (){
-        getTaskList.deletePomodoro(0)
-        setMinuts(list.length!==0?list[0].time.minuts*60:25*60)
-        setIsPause(false)
-        setIsTimerStarted(false)
+        // getTaskList.deletePomodoro(0)
+        setWorkingMinuts(list.length!==0?list[0].time.workingMinuts*60:25*60)
+        setIsBreak(true)
+        setIsTimerStarted(true)
+        setClearTimer(setInterval(()=>{setShortBreak(prev=>prev-1)},1000))
     }
 
     function stopTimer(){
         setClearTimer(clearInterval(clearTimer))
-        setMinuts(list.length!==0?list[0].time.minuts*60:25*60)
+        setWorkingMinuts(list.length!==0?list[0].time.workingMinuts*60:25*60)
         setIsTimerStarted(false)
         setIsPause(false)
     }
 
+    function skipBreak(){
+        getTaskList.deletePomodoro(0)
+        setClearTimer(clearInterval(clearTimer))
+        setShortBreak(list.length!==0?list[0].time.shortBreak*60:25*60)
+        setIsTimerStarted(false)
+        setIsPause(false)
+        setIsBreak(false)
+    }
 
     return(
-        <PomodoroTimer 
-            onStop={stopTimer} 
-            onDone={doneTask} 
-            isTimerStarted={isTimerStarted} 
-            onStart={startTimer} 
-            isTimerPause={isPause} 
-            onPause={pauseTimer} 
-            name={list.length!==0?list[0].name:'Нет помодоров'} 
-            minuts={Math.trunc(minuts/60%60)} 
-            seconds={Math.trunc(minuts%60)} 
-            pomodor={list.length!==0?list[0].pomodoroEndNum-list[0].pomodoroNum + 1 : 1}
-        />
+        <>
+         {!isBreak && <PomodoroTimer 
+                // onStop={stopTimer} 
+                // onDone={doneTask} 
+                isTimerStarted={isTimerStarted} 
+                // onStart={startTimer} 
+                isTimerPause={isPause} 
+                isBreak={isBreak}
+                // onPause={pauseTimer} 
+                name={list.length!==0?list[0].name:'Нет задач'} 
+                minuts={Math.trunc(workingMinuts/60%60)} 
+                seconds={Math.trunc(workingMinuts%60)} 
+                pomodor={list.length!==0?list[0].pomodoroEndNum-list[0].pomodoroNum + 1 : 1}
+                btnOneText={isTimerStarted?'Пауза':isPause?'Продолжить':'Старт'}
+                btnTwoText={isTimerStarted?'Стоп':isPause?'Сделано':'Стоп'}
+                onBtnOneClick={isTimerStarted?pauseTimer:startTimer}
+                onBtnTwoClick={isPause?doneTask:stopTimer}
+             />}
+             {isBreak &&
+                <PomodoroTimer 
+                    isTimerStarted={isTimerStarted} 
+                    isTimerPause={isPause} 
+                    isBreak={isBreak}
+                    name={list.length!==0?list[0].name:'Нет задач'} 
+                    minuts={Math.trunc(shortBreak/60%60)} 
+                    seconds={Math.trunc(shortBreak%60)} 
+                    pomodor={list.length!==0?list[0].pomodoroEndNum-list[0].pomodoroNum + 1 : 1}
+                    btnOneText={isTimerStarted?'Пауза':'Продолжить'}
+                    btnTwoText={'Пропустить'}
+                    onBtnOneClick={isTimerStarted?pauseTimer:startTimer}
+                    onBtnTwoClick={skipBreak}
+             />
+             }
+        </>
+           
+        
+        
+        
     )
 
 }
