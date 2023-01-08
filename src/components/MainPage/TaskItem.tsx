@@ -55,7 +55,7 @@ export function TaskItem ({name,id,itemNum,objKey}:IItem){
 
     function handleDeletePomodoro (e:React.SyntheticEvent){
         e.preventDefault()
-        getTaskList.deletePomodoro(objKey)
+        getTaskList.deleteNumPomodoro(objKey)
     }
 
     function handleCloseModal (e:React.SyntheticEvent){

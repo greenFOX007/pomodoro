@@ -36,6 +36,7 @@ export function PomodoroTimerContainer (){
 
     const [timerOnBreak,setTimerOnBreak] = useState<number>(0) // время на паузе
 
+
     useEffect(()=>{
         localStorage.setItem('StatItem',JSON.stringify(statList))
     },[statList])
@@ -91,6 +92,10 @@ export function PomodoroTimerContainer (){
 
     useEffect(()=>{
         if(workingMinuts===0){
+            let time = `${new Date().getDate()}.${new Date().getMonth()}.${new Date().getFullYear()}`
+            getStatList.addWorkTime([time,(list.length!==0?list[0].time.workingMinuts*60:25*60) - workingMinuts])
+            getStatList.addDoneTask(time)
+            changeTimeonBreak()
             setIsBreak(true)
             setIsTimerStarted(true)
             startBreakTimer()
