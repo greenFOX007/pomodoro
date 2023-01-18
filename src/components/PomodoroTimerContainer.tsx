@@ -14,11 +14,17 @@ export function PomodoroTimerContainer (){
     
     const list:Array<IListItem> = Object.values(taskList)
 
-    const [workingMinuts,setWorkingMinuts] = useState<number>(list.length!==0?list[0].time.workingMinuts*60:25*60) //Время для таймера рабочего времени 
+    const WorkingMinutsConst =  list.length!==0?list[0].time.workingMinuts*60:1*60
 
-    const [shortBreak,setShortBreak] = useState<number>(list.length!==0?list[0].time.shortBreak*60:5*60) //Время для таймера короткого перерыва
+    const ShortBreakMinutsConst = list.length!==0?list[0].time.shortBreak*60:1*60
 
-    const [longBreak,setLongBreak] = useState<number>(list.length!==0?list[0].time.longBreak*60:25*60) //Время для таймера большого перерыва 
+    const LongtBreakMinutsConst = list.length!==0?list[0].time.longBreak*60:2*60
+
+    const [workingMinuts,setWorkingMinuts] = useState<number>(WorkingMinutsConst) //Время для таймера рабочего времени 
+
+    const [shortBreak,setShortBreak] = useState<number>(ShortBreakMinutsConst) //Время для таймера короткого перерыва
+
+    const [longBreak,setLongBreak] = useState<number>(LongtBreakMinutsConst) //Время для таймера большого перерыва 
 
     const [isTimerStarted,setIsTimerStarted] = useState(false) 
 
@@ -36,25 +42,31 @@ export function PomodoroTimerContainer (){
 
     const [timerOnBreak,setTimerOnBreak] = useState<number>(0) // время на паузе
 
+   
+
 
     useEffect(()=>{
         localStorage.setItem('StatItem',JSON.stringify(statList))
     },[statList])
 
 
+    function currendDay ():string{
+        return `${new Date().getDate()}.${new Date().getMonth()}.${new Date().getFullYear()}`
+    }
+
+
     // функция для сброса рабочего таймера 
     function clearTimerUtil() {
         setIsTimerStarted(false)
         setIsPause(false)
-        setWorkingMinuts(list.length!==0?list[0].time.workingMinuts*60:25*60)
+        setWorkingMinuts(WorkingMinutsConst)
     }
 
     
     // Функция для сброса таймера на паузе и сохранение в статистику
     function changeTimeonBreak(){
-        let time = `${new Date().getDate()}.${new Date().getMonth()}.${new Date().getFullYear()}`
         setClearTimerOnBreak(clearInterval(clearTimerOnBreak))
-        getStatList.addBreakTime([time,timerOnBreak])
+        getStatList.addBreakTime([currendDay(),timerOnBreak])
         setTimerOnBreak(0)
     }
 
@@ -68,6 +80,7 @@ export function PomodoroTimerContainer (){
     }
 
     useEffect(()=>{
+        setFirstTask(list[0])
         if (list.length!==0 && list[0].pomodoroNum===0){
             getTaskList.remove(list[0].id)
             clearTimerUtil()
@@ -76,11 +89,12 @@ export function PomodoroTimerContainer (){
            clearTimerUtil()
         }   
 
-        if(list.length!==0 && (list[0].pomodoroEndNum-list[0].pomodoroNum + 1) % 4 === 0){
+        if(list.length!==0 && ((list[0].pomodoroEndNum-list[0].pomodoroNum + 1) % 4 === 0)){
             setIsLongBreak(true)
         }
+    },[list[0]])
 
-    },[list])
+
 
     useEffect(()=>{
         if(firstTask !== list[0]){
@@ -92,32 +106,36 @@ export function PomodoroTimerContainer (){
 
     useEffect(()=>{
         if(workingMinuts===0){
-            let time = `${new Date().getDate()}.${new Date().getMonth()}.${new Date().getFullYear()}`
-            getStatList.addWorkTime([time,(list.length!==0?list[0].time.workingMinuts*60:25*60) - workingMinuts])
-            getStatList.addDoneTask(time)
+            getStatList.addWorkTime([currendDay(),(WorkingMinutsConst) - workingMinuts])
+            getStatList.addDoneTask(currendDay())
             changeTimeonBreak()
             setIsBreak(true)
             setIsTimerStarted(true)
-            startBreakTimer()
-        }
-        if(shortBreak===0 || longBreak===0){
-            getTaskList.deletePomodoro(0)
             setClearTimer(clearInterval(clearTimer))
-            setShortBreak(list.length!==0?list[0].time.shortBreak*60:5*60)
-            setLongBreak(list.length!==0?list[0].time.longBreak*60:25*60)
-            setIsTimerStarted(false)
-            setIsPause(false)
-            setIsBreak(false)
-            setWorkingMinuts(list.length!==0?list[0].time.workingMinuts*60:25*60)
+            startBreakTimer()
+            setWorkingMinuts(WorkingMinutsConst)
         }
-    },[workingMinuts,shortBreak])
+       
+    },[workingMinuts])
 
-   
+   useEffect(()=>{
+    if(shortBreak===0 || longBreak===0){
+        getTaskList.deletePomodoro(0)
+        setClearTimer(clearInterval(clearTimer))
+        setShortBreak(ShortBreakMinutsConst)
+        setLongBreak(LongtBreakMinutsConst) 
+        setIsTimerStarted(false)
+        setIsPause(false)
+        setIsLongBreak(false)
+        setIsBreak(false)   
+        
+    }
+   },[shortBreak,longBreak])
 
     function startTimer (){
-        let time = `${new Date().getDate()}.${new Date().getMonth()}.${new Date().getFullYear()}`
+       
         if(list.length !== 0){
-            if(!statList[time]){
+            if(!statList[currendDay()]){
                 getStatList.insert({doneTasks:0,doneWorkTime:0,breakTime:0,stops:0})
             }
 
@@ -145,32 +163,30 @@ export function PomodoroTimerContainer (){
     }
 
     function doneTask (){
-        let time = `${new Date().getDate()}.${new Date().getMonth()}.${new Date().getFullYear()}`
-        getStatList.addWorkTime([time,(list.length!==0?list[0].time.workingMinuts*60:25*60) - workingMinuts])
-        setWorkingMinuts(list.length!==0?list[0].time.workingMinuts*60:25*60)
+        getStatList.addWorkTime([currendDay(),(WorkingMinutsConst) - workingMinuts])
+        setWorkingMinuts(WorkingMinutsConst)
         setIsBreak(true)
         setIsTimerStarted(true)
-        startBreakTimer()
-        getStatList.addDoneTask(time)
+        startBreakTimer()  
+        getStatList.addDoneTask(currendDay())
         changeTimeonBreak()
         
     }
 
     function stopTimer(){
-        let time = `${new Date().getDate()}.${new Date().getMonth()}.${new Date().getFullYear()}`
         setClearTimer(clearInterval(clearTimer))
-        setWorkingMinuts(list.length!==0?list[0].time.workingMinuts*60:25*60)
+        setWorkingMinuts(WorkingMinutsConst)
         setIsTimerStarted(false)
         setIsPause(false)    
         changeTimeonBreak()
-        getStatList.stops([time])
+        getStatList.stops([currendDay()])
     }
 
     function skipBreak(){
         getTaskList.deletePomodoro(0)
         setClearTimer(clearInterval(clearTimer))
-        setShortBreak(list.length!==0?list[0].time.shortBreak*60:5*60)
-        setLongBreak(list.length!==0?list[0].time.longBreak*60:5*60)
+        setShortBreak(ShortBreakMinutsConst)
+        setLongBreak(LongtBreakMinutsConst)
         setIsTimerStarted(false)
         setIsPause(false)
         setIsBreak(false)
@@ -185,7 +201,6 @@ export function PomodoroTimerContainer (){
                 isTimerPause={isPause} 
                 isBreak={isBreak}
                 name={list.length!==0?list[0].name:'Нет задач'} 
-                minuts={workingMinuts} 
                 seconds={workingMinuts} 
                 pomodor={list.length!==0?list[0].pomodoroEndNum-list[0].pomodoroNum + 1 : 1}
                 btnOneText={isTimerStarted?'Пауза':isPause?'Продолжить':'Старт'}
@@ -199,7 +214,6 @@ export function PomodoroTimerContainer (){
                 isTimerPause={isPause} 
                 isBreak={isBreak}
                 name={list.length!==0?list[0].name:'Нет задач'} 
-                minuts={isLongBreak?longBreak:shortBreak} 
                 seconds={isLongBreak?longBreak:shortBreak} 
                 pomodor={list.length!==0?list[0].pomodoroEndNum-list[0].pomodoroNum + 1 : 1}
                 btnOneText={isTimerStarted?'Пауза':'Продолжить'}

@@ -30,23 +30,58 @@ export function StatListApi (initial: IList<IStatList>){
     const changeCurrentDayName = createEvent<number>()
     const insertDayName = createEvent<string>()
 
+    function currentTime(){
+      return `${new Date().getDate()}.${new Date().getMonth()}.${new Date().getFullYear()}`
+    }
+
 
     const $currentWeek = createStore<string>(`${numOfWeekNow()}`)
     .on(changeCurrentWeek, (_, value) => value).reset(reset, insertWeek)
 
-    const $currentDay = createStore<string>(`${new Date().getDate()}.${new Date().getMonth()}.${new Date().getFullYear()}`)
+    const $currentDay = createStore<string>(currentTime())
     .on(changeCurrentDay, (_, value) => value).reset(reset, insertDay)
 
-    const $currentDayName = createStore<number>(getDay(`${new Date().getDate()}.${new Date().getMonth()}.${new Date().getFullYear()}`) )
+    const $currentDayName = createStore<number>(getDay(currentTime()) )
     .on(changeCurrentDayName, (_, value) => value).reset(reset, insertDayName)
 
 
     const $statListitems = createStore<IList<IStatList>>(initial)
-    .on(insert, (statList, newStatItem) => ({...statList, [`${new Date().getDate()}.${new Date().getMonth()}.${new Date().getFullYear()}`]:newStatItem}))
-    .on(addDoneTask, (statList,key)=> ({...statList,[key]:{...statList[key], doneTasks:statList[key].doneTasks+1}}))
-    .on(addWorkTime, (statList,[key,time])=> ({...statList,[key]:{...statList[key],doneWorkTime:statList[key].doneWorkTime+time}}))
-    .on(addBreakTime, (statList,[key,time])=> ({...statList,[key]:{...statList[key],breakTime:statList[key].breakTime+time}}))
-    .on(stops,((statList, [key])=> ({...statList,[key]:{...statList[key],stops:statList[key].stops+1}})))
+    .on(insert, (statList, newStatItem) => ({
+      ...statList, 
+      [currentTime()]:newStatItem
+    }))
+
+    .on(addDoneTask, (statList,key)=> ({
+      ...statList,
+      [key]:{
+        ...statList[key], 
+        doneTasks:statList[key].doneTasks+1
+      }
+    }))
+
+    .on(addWorkTime, (statList,[key,time])=> ({
+      ...statList,
+      [key]:{
+        ...statList[key],
+        doneWorkTime:statList[key].doneWorkTime+time
+      }
+    }))
+
+    .on(addBreakTime, (statList,[key,time])=> ({
+      ...statList,
+      [key]:{
+        ...statList[key],
+        breakTime:statList[key].breakTime+time
+      }
+    }))
+    
+    .on(stops,((statList, [key])=> ({
+      ...statList,
+      [key]:{
+        ...statList[key],
+        stops:statList[key].stops+1
+      }
+    })))
 
     const submit = createEvent<React.SyntheticEvent>()
      submit.watch(event => event.preventDefault())

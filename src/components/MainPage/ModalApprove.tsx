@@ -5,12 +5,11 @@ import { Button } from "./Button";
 
 
 interface IItemID {
-    id:string;
     onClose?:(e:React.SyntheticEvent)=>void;
     onDelete?:(e:React.SyntheticEvent)=>void;
 }
 
-export function ModalApprove ({id,onClose,onDelete}:IItemID){
+export function ModalApprove ({onClose,onDelete}:IItemID){
    
     const node = document.querySelector('#modal')
     if (!node) return null;

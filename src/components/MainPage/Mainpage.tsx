@@ -1,11 +1,9 @@
-import React from "react";
 import { PomodoroTimerContainer } from "../PomodoroTimerContainer";
 import { FormAddItem } from "./FormAddItem";
 
 export function Mainpage (){
 
    
-
     return(
         <div className="pt-24 flex">
             <div className="w-2/5 w mr-4">
@@ -15,7 +13,7 @@ export function Mainpage (){
                     <li className="red-list-type">Запустите таймер («помидор»)</li>
                     <li className="red-list-type">Работайте пока «помидор» не прозвонит</li>
                     <li className="red-list-type"> Сделайте короткий перерыв (3-5 минут)</li>
-                    <li className="red-list-type">Продолжайте работать «помидор» за «помидором», пока задача не будут выполнена. Каждые 4 «помидора».</li>
+                    <li className="red-list-type">Продолжайте работать «помидор» за «помидором», пока задача не будут выполнена. Каждые 4 «помидора» делайте длинный перерыв (15-30 минут).</li>
                 </ul>
                <FormAddItem/>
             </div>

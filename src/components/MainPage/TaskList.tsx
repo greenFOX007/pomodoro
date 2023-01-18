@@ -30,7 +30,10 @@ export function TaskList ({list}:IList1){
             Object.values(list).map((item)=>arr.push(item.time.workingMinuts*item.pomodoroNum))
             const summ = arr.reduce((prev,curr)=>prev+curr)
             setTime(summ)
+        }else{
+            setTime(0)
         }
+        
         
     },[list])
 
