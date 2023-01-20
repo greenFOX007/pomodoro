@@ -6,7 +6,6 @@ import { Button } from './MainPage/Button'
 
 interface IPomodoroTimer {
     name:string,
-    minuts:number,
     seconds:number,
     pomodor:number,  
     isTimerStarted:boolean,
@@ -34,7 +33,9 @@ export function PomodoroTimer (props:IPomodoroTimer){
         {[`text-main-green`]:props.isTimerStarted===true&&props.isBreak===true},
     )
 
-   
+    const minuts = Math.trunc(props.seconds/60%60)<10?`0${Math.trunc(props.seconds/60%60)}`:Math.trunc(props.seconds/60%60)
+    const seconds = Math.trunc(props.seconds%60)<10?`0${Math.trunc(props.seconds%60)}`:Math.trunc(props.seconds%60)
+
 
     return (
         <div className='bg-gray-F4 w-3/5 pb-10'>
@@ -45,7 +46,7 @@ export function PomodoroTimer (props:IPomodoroTimer){
             <div className=''>
                 <div className='flex justify-center items-center'>
                     <div className={textStyles}>
-                        {Math.trunc(props.minuts/60%60)<10?`0${Math.trunc(props.minuts/60%60)}`:Math.trunc(props.minuts/60%60)}:{Math.trunc(props.seconds%60)<10?`0${Math.trunc(props.seconds%60)}`:Math.trunc(props.seconds%60)}
+                        {minuts}:{seconds}
                     </div>
                     {/* <button className='bg-gray-C4 w-12 h-12 rounded-full text-white text-3xl font-normal'>+</button> */}
                 </div>

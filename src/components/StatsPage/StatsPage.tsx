@@ -40,7 +40,8 @@ export function StatsPage (){
         
         setStatValues(list)
     },[currentWeekStore,statList])
-    
+
+
     
     return (
         <div className='pt-24 pb-12'>
@@ -58,7 +59,7 @@ export function StatsPage (){
                 </div> 
             </div>
             <div className='mt-8 flex justify-between'>
-                <FocusItem focus={8} />
+                <FocusItem item={statList[currentDay]} />
                 <TimeOnPauseItem time={statList[currentDay]?statList[currentDay].breakTime:0} />
                 <StopsItem stops={statList[currentDay]?statList[currentDay].stops:0} />
             </div>

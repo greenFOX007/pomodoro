@@ -1,6 +1,6 @@
+import classNames from "classnames";
 import { useStore } from "effector-react";
-import { ChangeEvent, FormEvent, useEffect} from "react";
-import { StatListApi } from "../../storage/StatisticStorage";
+import { ChangeEvent, FormEvent, useEffect, useState} from "react";
 import { TaskListApi } from "../../storage/TaskListStorage";
 import { generateRamdomID } from "../../utills/generateRandomIndex";
 import { Button } from "./Button";
@@ -17,6 +17,7 @@ export function FormAddItem (){
 
     const input = useStore(getTaskList.$input)
     const taskList = useStore(getTaskList.$taskListitems)
+    const [isValidInput,setIsValidInput] = useState<Boolean>(true)
     
     
     function handleChange (e:ChangeEvent<HTMLInputElement>){
@@ -29,19 +30,39 @@ export function FormAddItem (){
 
     function handleSubmit (e:FormEvent) {
         e.preventDefault()
-        getTaskList.insert({name:input,id:generateRamdomID(),time:{workingMinuts:25,shortBreak:5,longBreak:20},pomodoroNum:1,pomodoroEndNum:1})        
+        if(input!==''){
+            setIsValidInput(true)
+            getTaskList.insert({
+                name:input,
+                id:generateRamdomID(),
+                time:{
+                    workingMinuts:1,
+                    shortBreak:1,
+                    longBreak:2},
+                pomodoroNum:1,
+                pomodoroEndNum:1})   
+        }else{
+            setIsValidInput(false)
+        }
+            
     }  
+
+    const inputStyle = classNames(
+        'bg-gray-F4 w-full block pl-4 text-base leading-4 py-5 focus:outline-none',
+        {'placeholder:text-gray-99':isValidInput},
+        {'placeholder:text-main-red':!isValidInput},
+    )
     
 
     return (
         <div className="w-96">
-            <form onSubmit={handleSubmit} className="mb-6 ">
+            <form onSubmit={handleSubmit} className="mb-6">
                  <input 
                     type={"text"} 
-                    placeholder={'Название задачи'} 
+                    placeholder={isValidInput?'Название задачи':'Введите название!'} 
                     onChange={handleChange} 
                     value={input} 
-                    className="bg-gray-F4 w-full block pl-4 text-base leading-4 py-5 focus:outline-none placeholder:text-gray-99"
+                    className={inputStyle}
                  />
                  <Button green={true} type={'submit'} text={'Добавить'} styles={'mt-6'} />
             </form>

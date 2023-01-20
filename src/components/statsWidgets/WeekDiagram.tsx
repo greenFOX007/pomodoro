@@ -46,16 +46,38 @@ export function WeekDiagram({list}:IListProps){
                 <div className="flex items-end w-full text-2x ml-14">
                     {weekList.map((item,index)=>{
                         if(item){
-                            return <button onClick={handleClick} style={{height:`${list[item].doneWorkTime*0.055}px`,minHeight:'5px'}} id={item} key={index} className={`text-transparent w-77px mr-8 z-10 ${currentDay===item?'bg-main-red':'bg-unactive-red'}`}>{index+1===7?0:index+1}</button>
+                            return <button 
+                                        onClick={handleClick} 
+                                        style={{height:`${list[item].doneWorkTime*0.055}px`,minHeight:'5px'}} 
+                                        id={item} 
+                                        key={index} 
+                                        className={`text-transparent w-77px mr-8 z-10 ${currentDay===item?'bg-main-red':'bg-unactive-red'}`}>
+                                        {index+1===7?0:index+1}
+                                     </button>
                         }else{
-                            return <button onClick={handleClick} style={{height:`5px`}} id='0' key={index} className="text-transparent w-77px mr-8 bg-gray-99 z-10">{index+1===7?0:index+1}</button>
+                            return <button 
+                                        onClick={handleClick} 
+                                        style={{height:`5px`}} 
+                                        id='0' 
+                                        key={index} 
+                                        className="text-transparent w-77px mr-8 bg-gray-99 z-10">
+                                        {index+1===7?0:index+1}
+                                    </button>
                         }
                     })}
                 <ul className="flex flex-col-reverse z-10">
-                    <li className="h-85 ml-7 "><div className="mr-5 text-xs">25 мин</div></li>
-                    <li className="h-85 ml-7 "><div className="mr-5 text-xs">50 мин</div></li>
-                    <li className="h-85 ml-7 "><div className="mr-5 text-xs">1 ч 15 мин</div></li>
-                    <li className="h-85 ml-7 "><div className="mr-5 text-xs">1 ч 40 мин</div></li>
+                    <li className="h-85 ml-7 ">
+                        <div className="mr-5 text-xs">25 мин</div>
+                    </li>
+                    <li className="h-85 ml-7 ">
+                        <div className="mr-5 text-xs">50 мин</div>
+                    </li>
+                    <li className="h-85 ml-7 ">
+                        <div className="mr-5 text-xs">1 ч 15 мин</div>
+                    </li>
+                    <li className="h-85 ml-7 ">
+                        <div className="mr-5 text-xs">1 ч 40 мин</div>
+                    </li>
                 </ul>
                 </div>
                 <ul className="absolute flex flex-col-reverse right-0 top-0 left-0 bottom-0">

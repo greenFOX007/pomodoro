@@ -29,8 +29,7 @@ export function PomodorCount ({donePomodoro}:IProps){
                          <div className="flex flex-row items-center justify-center py-6">
                             <img  src={img2} alt="pomodor"/>
                          </div>
-                    )}
-                   
+                    )}    
                 </div>
         </div>
     )

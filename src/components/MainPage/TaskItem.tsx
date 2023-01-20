@@ -136,7 +136,7 @@ export function TaskItem ({name,id,itemNum,objKey}:IItem){
             )}
             </div>
             
-            {isModalOpen && (<ModalApprove onClose={handleCloseModal} onDelete={handleDelete} id={id}/>)}
+            {isModalOpen && (<ModalApprove onClose={handleCloseModal} onDelete={handleDelete}/>)}
         </li>
     )
 }
