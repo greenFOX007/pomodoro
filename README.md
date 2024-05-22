@@ -1,3 +1,9 @@
+**A diploma project at the end of a course on React.
+The project used such technologies as React, TypeScript, effector, React router, tailwinds css.
+The task was to make an application for time management using pomodoro methodology.**
+
+# Website: https://pomodoro-app-skillbox.netlify.app/
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
